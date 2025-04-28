@@ -16,11 +16,15 @@ public class TCPing {
 
     public static void main(String[] args) {
         if (args.length < 1 || args.length > 2) {
+            printHelp();
             return;
         }
 
         String host = args[0];
-        int port = DEFAULT_PORT;
+        if (args[0].equals("--h")) {
+            printHelp();
+        }
+        var port = DEFAULT_PORT;
 
         if (args.length == 2) {
             try {
@@ -50,18 +54,18 @@ public class TCPing {
 
         System.out.printf("TCPing %s [%s] с портом %d:\n", host, resolveIP(host), port);
 
-        int successCount = 0;
-        int failCount = 0;
-        long totalTime = 0;
-        long minTime = Long.MAX_VALUE;
-        long maxTime = 0;
+        var successCount = 0;
+        var failCount = 0;
+        var totalTime = 0L;
+        var minTime = Long.MAX_VALUE;
+        var maxTime = 0L;
 
         for (int i = 0; i < DEFAULT_COUNT; i++) {
             try {
                 Instant start = Instant.now();
-                boolean reachable = isReachable(host, port);
+                var reachable = isReachable(host, port);
                 Duration duration = Duration.between(start, Instant.now());
-                long elapsed = duration.toMillis();
+                var elapsed = duration.toMillis();
 
                 if (reachable) {
                     successCount++;
@@ -110,5 +114,12 @@ public class TCPing {
         } catch (java.net.UnknownHostException e) {
             return "неизвестный адрес";
         }
+    }
+
+    private static void printHelp() {
+        System.out.println("Использование: tcping <хост> [порт]");
+        System.out.println("Примеры:");
+        System.out.println("  tcping example.ru       # Проверка порта 80");
+        System.out.println("  tcping example.ru 443   # Проверка порта 443");
     }
 }
