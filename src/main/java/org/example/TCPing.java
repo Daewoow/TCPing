@@ -19,16 +19,18 @@ public class TCPing {
             return;
         }
 
-        var host = args[0];
-        var port = DEFAULT_PORT;
+        String host = args[0];
+        int port = DEFAULT_PORT;
 
         if (args.length == 2) {
             try {
                 port = Integer.parseInt(args[1]);
                 if (port < 1 || port > 65535) {
+                    System.err.println("Порт должен быть в диапазоне 1-65535");
                     return;
                 }
             } catch (NumberFormatException e) {
+                System.err.println("Неверный формат порта");
                 return;
             }
         }
@@ -48,11 +50,11 @@ public class TCPing {
 
         System.out.printf("TCPing %s [%s] с портом %d:\n", host, resolveIP(host), port);
 
-        var successCount = 0;
-        var failCount = 0;
-        var totalTime = 0L;
-        var minTime = Long.MAX_VALUE;
-        var maxTime = 0L;
+        int successCount = 0;
+        int failCount = 0;
+        long totalTime = 0;
+        long minTime = Long.MAX_VALUE;
+        long maxTime = 0;
 
         for (int i = 0; i < DEFAULT_COUNT; i++) {
             try {
